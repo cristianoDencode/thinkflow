@@ -1,0 +1,21 @@
+# Portuguese NLP for the Presidio analyzer (spaCy pt_core_news_lg: PER / LOC / ORG ...).
+nlp_engine_name: spacy
+models:
+  - lang_code: pt
+    model_name: pt_core_news_lg
+
+ner_model_configuration:
+  model_to_presidio_entity_mapping:
+    PER: PERSON
+    PERSON: PERSON
+    LOC: LOCATION
+    GPE: LOCATION
+    ORG: ORGANIZATION
+    MISC: NRP
+  low_confidence_score_multiplier: 0.4
+  low_score_entity_names: []
+  labels_to_ignore:
+    - ORGANIZATION # many false positives; the app ignores it anyway
+    - ORG
+    - MISC
+    - NRP

@@ -1,0 +1,20 @@
+# Presidio's own recognizers for `pt`. The Brazilian ones (CPF, CNPJ, CNS...) come from
+# tarja-presidio and are registered in wsgi.py (Presidio's YAML cannot load external classes).
+supported_languages:
+  - pt
+global_regex_flags: 26
+
+recognizers:
+  - name: CreditCardRecognizer
+    supported_languages:
+      - language: pt
+        context: [cartao, cartão, credito, crédito, visa, mastercard, elo, amex]
+    type: predefined
+  - name: EmailRecognizer
+    supported_languages:
+      - pt
+    type: predefined
+  - name: PhoneRecognizer
+    supported_languages:
+      - pt
+    type: predefined

@@ -1,0 +1,248 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- Design tokens (light) ---------- */
+:root {
+  --bg: #f6f5fb;
+  --bg-elevated: #ffffff;
+  --sidebar: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f1effa;
+  --surface-hover: #ece9f8;
+  --border: #e4e1f0;
+  --border-strong: #d4cfea;
+  --text: #17142b;
+  --muted: #625d7d;
+  --subtle: #8d88a8;
+  --accent: #6d28d9;
+  --accent-hover: #5b21b6;
+  --accent-text: #6d28d9;
+  --accent-fg: #ffffff;
+  --accent-soft: #ede7fd;
+  --ring: #8b5cf6;
+  --success: #15803d;
+  --success-soft: #dcfce7;
+  --warning: #b45309;
+  --warning-soft: #fef3c7;
+  --danger: #b91c1c;
+  --danger-soft: #fee2e2;
+  --glow: rgba(124, 58, 237, 0.12);
+  color-scheme: light;
+}
+
+/* ---------- Design tokens (dark) ---------- */
+.dark {
+  --bg: #0a0913;
+  --bg-elevated: #110f1f;
+  --sidebar: #0e0c1a;
+  --surface: #14122a;
+  --surface-2: #1a1734;
+  --surface-hover: #211d40;
+  --border: #262243;
+  --border-strong: #37315f;
+  --text: #f2f0fb;
+  --muted: #a7a2c3;
+  --subtle: #7a7598;
+  --accent: #7c3aed;
+  --accent-hover: #8b5cf6;
+  --accent-text: #a78bfa;
+  --accent-fg: #ffffff;
+  --accent-soft: #241a4a;
+  --ring: #a78bfa;
+  --success: #4ade80;
+  --success-soft: #11291c;
+  --warning: #fbbf24;
+  --warning-soft: #2c2410;
+  --danger: #f87171;
+  --danger-soft: #2f1416;
+  --glow: rgba(124, 58, 237, 0.35);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-sidebar: var(--sidebar);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-sans: 'Inter', 'Segoe UI', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--accent-soft);
+  }
+}
+
+/* Decorative wave behind the chat hero (inspired by the reference layout). */
+.hero-glow {
+  background:
+    radial-gradient(60% 80% at 85% 0%, var(--glow), transparent 70%),
+    radial-gradient(40% 50% at 100% 30%, var(--glow), transparent 70%);
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+/* Markdown content */
+.prose-tf {
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.prose-tf > * + * {
+  margin-top: 0.75em;
+}
+.prose-tf h1,
+.prose-tf h2,
+.prose-tf h3 {
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.2em;
+}
+.prose-tf h1 {
+  font-size: 1.35rem;
+}
+.prose-tf h2 {
+  font-size: 1.2rem;
+}
+.prose-tf h3 {
+  font-size: 1.05rem;
+}
+.prose-tf ul {
+  list-style: disc;
+  padding-left: 1.4em;
+}
+.prose-tf ol {
+  list-style: decimal;
+  padding-left: 1.4em;
+}
+.prose-tf li + li {
+  margin-top: 0.25em;
+}
+.prose-tf a {
+  color: var(--accent-text);
+  text-decoration: underline;
+}
+.prose-tf code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--surface-2);
+  padding: 0.1em 0.35em;
+  border-radius: 0.3rem;
+}
+.prose-tf pre {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 0.85rem 1rem;
+  border-radius: 0.6rem;
+  overflow-x: auto;
+}
+.prose-tf blockquote {
+  border-left: 3px solid var(--border-strong);
+  padding-left: 0.9em;
+  color: var(--muted);
+}
+.prose-tf table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  display: block;
+  overflow-x: auto;
+}
+.prose-tf th,
+.prose-tf td {
+  border: 1px solid var(--border);
+  padding: 0.4em 0.65em;
+  text-align: left;
+}
+.prose-tf th {
+  background: var(--surface-2);
+}
+
+/* highlight.js — token colors tied to theme */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in {
+  color: #8b5cf6;
+}
+.hljs-string,
+.hljs-attr {
+  color: #059669;
+}
+.dark .hljs-string,
+.dark .hljs-attr {
+  color: #6ee7b7;
+}
+.hljs-number,
+.hljs-literal {
+  color: #d97706;
+}
+.hljs-comment {
+  color: var(--subtle);
+  font-style: italic;
+}
+.hljs-title,
+.hljs-function {
+  color: #2563eb;
+}
+.dark .hljs-title,
+.dark .hljs-function {
+  color: #93c5fd;
+}
+
+@keyframes tf-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.animate-tf-pulse {
+  animation: tf-pulse 1.4s ease-in-out infinite;
+}

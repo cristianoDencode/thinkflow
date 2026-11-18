@@ -1,0 +1,13 @@
+**/node_modules
+**/dist
+**/coverage
+**/playwright-report
+**/test-results
+apps/web/e2e/.data-*
+data
+.git
+.github
+*.log
+.env
+.env.*
+minio-data

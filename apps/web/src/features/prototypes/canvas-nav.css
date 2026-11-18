@@ -1,0 +1,68 @@
+/*
+ * Overlay scrollbars of the infinite canvas (GrapesJS draws none in this mode). The root sits as
+ * the FIRST child of `.gjs-cv-canvas`: above the frames, but below the GrapesJS tools layer (which
+ * has the same z-index and comes later in the DOM), so element toolbars / the RTE stay on top.
+ */
+.tf-cnav {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.tf-cnav__bar {
+  position: absolute;
+  pointer-events: auto;
+  background: transparent;
+  touch-action: none;
+}
+
+.tf-cnav__bar[hidden] {
+  display: none;
+}
+
+.tf-cnav__bar--x {
+  left: 0;
+  bottom: 0;
+  height: 8px;
+  right: 0;
+}
+
+.tf-cnav__bar--y {
+  top: 0;
+  right: 0;
+  width: 8px;
+  bottom: 0;
+}
+
+/* leave the corner free when both bars show */
+.tf-cnav--both .tf-cnav__bar--x {
+  right: 8px;
+}
+.tf-cnav--both .tf-cnav__bar--y {
+  bottom: 8px;
+}
+
+.tf-cnav__thumb {
+  position: absolute;
+  border-radius: 4px;
+  background: var(--border-strong, #bbb);
+  cursor: default;
+}
+
+.tf-cnav__bar--x .tf-cnav__thumb {
+  top: 1px;
+  bottom: 1px;
+  left: 0;
+}
+
+.tf-cnav__bar--y .tf-cnav__thumb {
+  left: 1px;
+  right: 1px;
+  top: 0;
+}
+
+.tf-cnav__thumb:hover,
+.tf-cnav__thumb[data-dragging] {
+  background: color-mix(in srgb, var(--text, #333) 40%, var(--border-strong, #bbb));
+}

@@ -1,0 +1,72 @@
+name: Bug report
+description: Something does not work as documented
+title: 'Bug: '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. **Do not paste API keys, passwords or personal data.** For security
+        problems use a private security advisory instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected and what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - AI gateway / routing
+        - Chat / agent mode
+        - Library
+        - Data with AI
+        - Privacy firewall
+        - Reports
+        - Tests (recording, evidence, documents)
+        - Prototypes
+        - Storage / Docker
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v0.1.0 or a commit hash
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How do you run Thinkflow?
+      options:
+        - pnpm dev
+        - pnpm build and pnpm start
+        - Docker (docker compose)
+        - Docker image from GHCR
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: OS, Node version and browser
+      placeholder: Ubuntu 24.04, Node 24.1, Chrome 140
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Redact secrets and personal data first.
+      render: shell

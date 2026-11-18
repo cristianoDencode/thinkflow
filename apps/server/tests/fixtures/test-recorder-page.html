@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Entrar</title>
+  </head>
+  <body>
+    <h1>Acesso ao sistema</h1>
+    <form
+      id="login"
+      onsubmit="
+        event.preventDefault();
+        document.getElementById('msg').textContent =
+          'Bem-vinda, ' + document.getElementById('email').value;
+      "
+    >
+      <label for="email">E-mail</label>
+      <input id="email" name="email" type="email" placeholder="seu@email" />
+      <label for="senha">Senha</label>
+      <input id="senha" name="senha" type="password" />
+      <label for="uf">UF</label>
+      <select id="uf" name="uf">
+        <option value="">Escolha</option>
+        <option value="RJ">Rio de Janeiro</option>
+        <option value="SP">São Paulo</option>
+      </select>
+      <label><input type="checkbox" id="aceito" name="aceito" /> Aceito os termos</label>
+      <button type="submit" data-testid="entrar">Entrar</button>
+    </form>
+    <p id="msg" role="status"></p>
+    <a href="/outra">Ir para outra página</a>
+  </body>
+</html>
