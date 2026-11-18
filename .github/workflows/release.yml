@@ -42,7 +42,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Criar release no GitHub
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
 
