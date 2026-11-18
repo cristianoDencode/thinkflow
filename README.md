@@ -1,189 +1,189 @@
 # Thinkflow
 
-**A self-hosted AI workspace for analysts and QA**: it routes model calls across providers with
-automatic fallback, protects personal data before it leaves your machine, and adds tools for test
-evidence and screen prototypes of legacy web systems.
+**Um espaço de trabalho de IA auto-hospedado para analistas e QA**: roteia as chamadas de modelo entre
+provedores com fallback automático, protege dados pessoais antes que saiam da sua máquina e traz
+ferramentas de evidência de testes e de protótipos de telas de sistemas web legados.
 
 [![CI](https://github.com/cristianoDencode/thinkflow/actions/workflows/ci.yml/badge.svg)](https://github.com/cristianoDencode/thinkflow/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/cristianoDencode/thinkflow/actions/workflows/codeql.yml/badge.svg)](https://github.com/cristianoDencode/thinkflow/actions/workflows/codeql.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Licença: MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-blue.svg)](LICENSE)
 ![Node](https://img.shields.io/badge/node-%3E%3D22.12-339933)
 
-[Leia em português](README.pt-BR.md)
+[Read in English](README.en.md)
 
-![The Thinkflow prototype editor](docs/images/prototype-editor.png)
+![O editor de protótipos do Thinkflow](docs/images/prototype-editor.png)
 
-> The interface is in Brazilian Portuguese. The code, the documentation and this README are in
-> English, and a [Portuguese README](README.pt-BR.md) is available.
+> A interface está em português do Brasil. O código e a documentação em `docs/` estão em inglês; este
+> arquivo é a versão em português do [README em inglês](README.en.md).
 
-## What is Thinkflow
+## O que é o Thinkflow
 
-Analysts and QA in teams that maintain legacy web systems juggle several things at once: AI
-providers with free-tier limits that fail at the worst moment, data that must not leave the
-organization, test evidence that has to be assembled by hand, and screens that need to be sketched
-before they are built. Thinkflow is one self-hosted workspace for all of it. A single local user,
-SQLite and an optional S3 bucket are enough to run it; there is no cloud service to sign up for.
+Analistas e QA de times que mantêm sistemas web legados lidam com várias coisas ao mesmo tempo:
+provedores de IA com limites de plano gratuito que falham na hora errada, dados que não podem sair da
+organização, evidências de teste montadas à mão e telas que precisam ser esboçadas antes de serem
+construídas. O Thinkflow é um único espaço de trabalho auto-hospedado para tudo isso. Um usuário local,
+o SQLite e, opcionalmente, um bucket S3 bastam para rodar; não há serviço em nuvem para assinar.
 
-## Features
+## Recursos
 
-**AI gateway and routing**
+**Gateway de IA e roteamento**
 
-- Connections to OpenRouter, Groq, Mistral, NVIDIA NIM, DeepSeek, Ollama/LM Studio, Anthropic,
-  OpenAI or any compatible endpoint, grouped into **combos** (virtual models with an ordered list).
-- **Fallback and cooldown**: on 429, exhausted quota, 5xx or network errors the next connection is
-  used and the failing one cools down, honoring `Retry-After`. See [docs/routing.md](docs/routing.md).
-- An **Anthropic- and OpenAI-compatible `/v1` gateway** so Claude Code (CLI and VS Code) and OpenAI
-  clients can use your combos ([docs/claude-code.md](docs/claude-code.md)).
-- **MCP servers** (stdio and HTTP) as chat tools, **Agent mode** that runs Claude Code through the
-  Claude Agent SDK, and **usage** with projections and an optional monthly budget
-  ([docs/usage.md](docs/usage.md)).
+- Conexões com OpenRouter, Groq, Mistral, NVIDIA NIM, DeepSeek, Ollama/LM Studio, Anthropic, OpenAI ou
+  qualquer endpoint compatível, reunidas em **combos** (modelos virtuais com uma lista ordenada).
+- **Fallback e cooldown**: em 429, cota esgotada, 5xx ou erro de rede, a próxima conexão é usada e a que
+  falhou entra em cooldown, respeitando o `Retry-After`. Veja [docs/routing.md](docs/routing.md).
+- Um **gateway `/v1` compatível com Anthropic e OpenAI**, para que o Claude Code (CLI e VS Code) e
+  clientes OpenAI usem seus combos ([docs/claude-code.md](docs/claude-code.md)).
+- **Servidores MCP** (stdio e HTTP) como ferramentas do chat, **Modo Agente** que roda o Claude Code
+  pelo Claude Agent SDK e **uso** com projeções e orçamento mensal opcional ([docs/usage.md](docs/usage.md)).
 
-**Analyst workspace**
+**Espaço de trabalho do analista**
 
-- Chat with history, incremental summaries, forking and Mermaid diagrams.
-- **Library**: PDF, DOCX, Markdown and images with OCR and full-text search, cited in chat; an
-  experimental NotebookLM engine ([docs/library.md](docs/library.md)).
-- **Data with AI** over PostgreSQL: read-only SQL checks, masked samples, result cards with CSV
-  export ([docs/data-ai.md](docs/data-ai.md)).
-- **Reports and templates** generated in the background, as HTML, Markdown or PDF
+- Chat com histórico, resumos incrementais, derivação de conversas e diagramas Mermaid.
+- **Biblioteca**: PDF, DOCX, Markdown e imagens com OCR e busca em texto completo, citados no chat; motor
+  NotebookLM experimental ([docs/library.md](docs/library.md)).
+- **Dados com IA** sobre Postgres: verificação de SQL somente leitura, amostras mascaradas e cartões de
+  resultado com exportação CSV ([docs/data-ai.md](docs/data-ai.md)).
+- **Relatórios e modelos** gerados em segundo plano, em HTML, Markdown ou PDF
   ([docs/reports.md](docs/reports.md)).
 
-**Privacy firewall**
+**Firewall de privacidade**
 
-- Personal data (CPF, CNPJ, e-mail, phone, names and more) is replaced by reversible tokens before
-  any model call and restored in the answer, for every call path, including local models. Optional
-  Presidio sidecar ([docs/privacy.md](docs/privacy.md)).
+- Dados pessoais (CPF, CNPJ, e-mail, telefone, nomes e mais) são trocados por códigos reversíveis antes de
+  qualquer chamada de modelo e restaurados na resposta, em todos os caminhos de chamada, inclusive modelos
+  locais. Sidecar Presidio opcional ([docs/privacy.md](docs/privacy.md)).
 
-**QA toolkit**
+**Kit de QA**
 
-- Record a manual test in a real browser ("Gravar") or just collect screenshots ("Só prints"), with
-  an annotated evidence editor, assertions, and replay with data sets.
-- **Test-case documents** in DOCX, PDF and HTML. The document categories are fixed; models let you
-  (or the AI) design only the look. Upload a new file per test case to a personal OneDrive
-  ([docs/testing.md](docs/testing.md), [docs/onedrive.md](docs/onedrive.md)).
+- Grave um teste manual em um navegador real ("Gravar") ou apenas colete prints ("Só prints"), com editor
+  de evidências anotadas, verificações e reexecução com conjuntos de dados.
+- **Documentos de caso de teste** em DOCX, PDF e HTML. As categorias do documento são fixas; os modelos
+  permitem que você (ou a IA) desenhe apenas a aparência. Envio de um arquivo novo por caso de teste para
+  um OneDrive pessoal ([docs/testing.md](docs/testing.md), [docs/onedrive.md](docs/onedrive.md)).
 
-**Prototype editor**
+**Editor de protótipos**
 
-- Capture a screen during a recording, or import one from a screen mapper, and edit it with
-  GrapesJS in **Free** mode (absolute positioning, drag, multi-select, group, layer lock, autosave
-  every 2 s) or **HTML** mode on the same document. AI assistant, versions, PNG render, and "send
-  to test case".
-- **System profiles**: e-Cidade, an open-source Brazilian municipal ERP, is the first built-in
-  profile ([docs/prototypes.md](docs/prototypes.md)).
+- Capture uma tela durante uma gravação, ou importe de um mapeador de telas, e edite com o GrapesJS no
+  modo **Livre** (posicionamento absoluto, arrastar, seleção múltipla, agrupar, bloqueio de camada,
+  autosave a cada 2 s) ou no modo **HTML**, sobre o mesmo documento. Assistente de IA, versões,
+  renderização em PNG e "enviar ao caso de teste".
+- **Perfis de sistema**: o e-Cidade, um ERP municipal brasileiro de código aberto, é o primeiro perfil
+  embutido ([docs/prototypes.md](docs/prototypes.md)).
 
-## Screenshots
+## Capturas de tela
 
-|                                             |                                                       |
-| ------------------------------------------- | ----------------------------------------------------- |
-| ![Chat](docs/images/chat.png)               | ![Test case](docs/images/test-case.png)               |
-| ![Connections](docs/images/connections.png) | ![Prototype editor](docs/images/prototype-editor.png) |
+|                                          |                                                           |
+| ---------------------------------------- | --------------------------------------------------------- |
+| ![Chat](docs/images/chat.png)            | ![Caso de teste](docs/images/test-case.png)               |
+| ![Conexões](docs/images/connections.png) | ![Editor de protótipos](docs/images/prototype-editor.png) |
 
-## Quick start
+## Início rápido
 
-Requirements: Node.js 22.12 or newer (24 recommended) and pnpm 10.
+Requisitos: Node.js 22.12 ou mais novo (recomendado 24) e pnpm 10.
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-This starts the API on `http://localhost:3737` and the dashboard on `http://localhost:5173`. Open
-the dashboard and create your local user (name and password) on the first visit. Then:
+Isso inicia a API em `http://localhost:3737` e o dashboard em `http://localhost:5173`. Abra o dashboard e
+crie seu usuário local (nome e senha) na primeira visita. Depois:
 
-1. **Conexões, Nova conexão**: pick a provider and paste its API key.
-2. **Conexões, Combos, Novo combo**: drag targets in order of preference.
-3. **Pergunte à AI**: choose the combo and chat. Turn on **MCP** to use registered tools.
+1. **Conexões, Nova conexão**: escolha um provedor e cole a chave de API.
+2. **Conexões, Combos, Novo combo**: arraste os alvos na ordem de preferência.
+3. **Pergunte à AI**: escolha o combo e converse. Ligue o **MCP** para usar as ferramentas cadastradas.
 
-Production, as a single process serving the API and the dashboard on `http://localhost:3737`:
+Produção, em um único processo servindo a API e o dashboard em `http://localhost:3737`:
 
 ```bash
 pnpm build
 pnpm start
 ```
 
-Docker, with data kept in `./data`:
+Docker, com os dados em `./data`:
 
 ```bash
 docker compose up -d --build
 ```
 
-The container is published on `127.0.0.1:3737` only. Optional services are Compose profiles:
-`docker compose --profile minio up -d` adds MinIO for S3 storage ([docs/storage.md](docs/storage.md))
-and `docker compose --profile privacy up -d --build` adds Presidio
-([docs/privacy.md](docs/privacy.md)). The image has no Chromium by default; build with
-`docker build --build-arg WITH_CHROMIUM=true .` to enable PDF/PNG rendering. Test recording needs
-Thinkflow on your own machine, not in Docker. All variables are in
-[docs/configuration.md](docs/configuration.md).
+O contêiner é publicado apenas em `127.0.0.1:3737`. Os serviços opcionais são perfis do Compose:
+`docker compose --profile minio up -d` adiciona o MinIO para armazenamento S3 ([docs/storage.md](docs/storage.md))
+e `docker compose --profile privacy up -d --build` adiciona o Presidio ([docs/privacy.md](docs/privacy.md)).
+A imagem não inclui Chromium por padrão; use `docker build --build-arg WITH_CHROMIUM=true .` para habilitar
+a geração de PDF/PNG. A gravação de testes exige o Thinkflow na sua própria máquina, não no Docker. Todas
+as variáveis estão em [docs/configuration.md](docs/configuration.md).
 
-## Architecture at a glance
+## Arquitetura em resumo
 
 ```mermaid
 flowchart LR
-  Web["Dashboard (React)"] <--> API["Fastify server"]
-  Clients["Claude Code / OpenAI clients"] -->|"/v1"| API
-  API --> Ctx["Contexts: chat, library, reports, testing, prototypes, ..."]
+  Web["Dashboard (React)"] <--> API["Servidor Fastify"]
+  Clients["Claude Code / clientes OpenAI"] -->|"/v1"| API
+  API --> Ctx["Contextos: chat, library, reports, testing, prototypes, ..."]
   Ctx --> DB[("SQLite")]
-  Ctx --> Obj[("Object store: local / S3 / MinIO")]
-  Ctx --> Chromium["Headless Chromium"]
-  Ctx --> MCP["MCP servers"]
-  Ctx --> Router["Router (fallback, cooldown)"]
-  Router --> FW["Privacy firewall"]
-  FW --> Providers["AI providers"]
+  Ctx --> Obj[("Armazenamento de objetos: local / S3 / MinIO")]
+  Ctx --> Chromium["Chromium headless"]
+  Ctx --> MCP["Servidores MCP"]
+  Ctx --> Router["Roteador (fallback, cooldown)"]
+  Router --> FW["Firewall de privacidade"]
+  FW --> Providers["Provedores de IA"]
 ```
 
-- A pnpm monorepo: `apps/server` (Fastify), `apps/web` (React 19) and `packages/shared` (Zod
-  contracts used by both).
-- The server has 15 bounded contexts, each split into `domain`, `application`, `infrastructure`
-  and `interface`, with the layering enforced in CI by dependency-cruiser.
-- All model traffic goes through one router, which applies the privacy firewall before any provider
-  call.
-- SQLite stores data; files go to a pluggable object store (disk, S3 or MinIO).
-- Headless Chromium records tests and renders PDFs and PNGs; without it the rest keeps working.
+- Monorepo pnpm: `apps/server` (Fastify), `apps/web` (React 19) e `packages/shared` (contratos Zod usados
+  pelos dois lados).
+- O servidor tem 15 bounded contexts, cada um dividido em `domain`, `application`, `infrastructure` e
+  `interface`, com as camadas verificadas no CI pelo dependency-cruiser.
+- Todo o tráfego de modelo passa por um único roteador, que aplica o firewall de privacidade antes de
+  qualquer chamada a provedor.
+- O SQLite guarda os dados; os arquivos vão para um armazenamento de objetos plugável (disco, S3 ou MinIO).
+- O Chromium headless grava testes e gera PDFs e PNGs; sem ele, o resto continua funcionando.
 
-More in [docs/architecture.md](docs/architecture.md) and the [decision records](docs/adr/).
+Mais em [docs/architecture.md](docs/architecture.md) e nos [registros de decisão](docs/adr/).
 
-## Documentation
+## Documentação
 
-| Topic                                 | Page                                               |
-| ------------------------------------- | -------------------------------------------------- |
-| Architecture, contexts, request flow  | [docs/architecture.md](docs/architecture.md)       |
-| Routing, combos, fallback             | [docs/routing.md](docs/routing.md)                 |
-| Claude Code and OpenAI clients        | [docs/claude-code.md](docs/claude-code.md)         |
-| Library, OCR, NotebookLM              | [docs/library.md](docs/library.md)                 |
-| Data with AI                          | [docs/data-ai.md](docs/data-ai.md)                 |
-| Privacy firewall                      | [docs/privacy.md](docs/privacy.md)                 |
-| Tests: recording, evidence, documents | [docs/testing.md](docs/testing.md)                 |
-| Prototype editor                      | [docs/prototypes.md](docs/prototypes.md)           |
-| Mapper import contract                | [docs/mapper-contract.md](docs/mapper-contract.md) |
-| Reports and templates                 | [docs/reports.md](docs/reports.md)                 |
-| Usage, history and context            | [docs/usage.md](docs/usage.md)                     |
-| File storage and MinIO                | [docs/storage.md](docs/storage.md)                 |
-| OneDrive                              | [docs/onedrive.md](docs/onedrive.md)               |
-| Configuration reference               | [docs/configuration.md](docs/configuration.md)     |
-| Architecture decision records         | [docs/adr/](docs/adr/)                             |
+A documentação em `docs/` está em inglês.
 
-## Roadmap
+| Tema                                     | Página                                             |
+| ---------------------------------------- | -------------------------------------------------- |
+| Arquitetura, contextos, fluxo            | [docs/architecture.md](docs/architecture.md)       |
+| Roteamento, combos, fallback             | [docs/routing.md](docs/routing.md)                 |
+| Claude Code e clientes OpenAI            | [docs/claude-code.md](docs/claude-code.md)         |
+| Biblioteca, OCR, NotebookLM              | [docs/library.md](docs/library.md)                 |
+| Dados com IA                             | [docs/data-ai.md](docs/data-ai.md)                 |
+| Firewall de privacidade                  | [docs/privacy.md](docs/privacy.md)                 |
+| Testes: gravação, evidências, documentos | [docs/testing.md](docs/testing.md)                 |
+| Editor de protótipos                     | [docs/prototypes.md](docs/prototypes.md)           |
+| Contrato de importação do mapeador       | [docs/mapper-contract.md](docs/mapper-contract.md) |
+| Relatórios e modelos                     | [docs/reports.md](docs/reports.md)                 |
+| Uso, histórico e contexto                | [docs/usage.md](docs/usage.md)                     |
+| Armazenamento de arquivos e MinIO        | [docs/storage.md](docs/storage.md)                 |
+| OneDrive                                 | [docs/onedrive.md](docs/onedrive.md)               |
+| Referência de configuração               | [docs/configuration.md](docs/configuration.md)     |
+| Registros de decisão de arquitetura      | [docs/adr/](docs/adr/)                             |
 
-- OAuth providers (for example GitHub Copilot) and per-provider quota detection.
-- Estimated cost per model on the Usage page.
-- Semantic search (embeddings) and automatic library pre-search that does not depend on tool calling.
-- Library in Agent mode, and per-tool MCP allow lists in document templates.
-- Attach a report directly to a chat, and a PDF cover without header and footer.
-- More system profiles for the prototype editor, and a published screen mapper that feeds it
+## Roteiro
+
+- Provedores via OAuth (por exemplo, GitHub Copilot) e detecção de cota por provedor.
+- Custo estimado por modelo na página Uso.
+- Busca semântica (embeddings) e pré-busca automática na biblioteca, sem depender de tool calling.
+- Biblioteca no modo Agente e lista de permissão por ferramenta MCP nos modelos de documento.
+- Anexar um relatório diretamente ao chat e capa do PDF sem cabeçalho e rodapé.
+- Mais perfis de sistema para o editor de protótipos e um mapeador de telas publicado que o alimente
   ([docs/mapper-contract.md](docs/mapper-contract.md)).
 
-## Contributing
+## Contribuindo
 
-Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, tests and the
-architecture rules, and the [Code of Conduct](CODE_OF_CONDUCT.md). See the
-[CHANGELOG](CHANGELOG.md) for what changed.
+Contribuições são bem-vindas. Leia o [CONTRIBUTING.md](CONTRIBUTING.md) (em inglês) para preparar o
+ambiente, rodar os testes e conhecer as regras de arquitetura, e o [Código de Conduta](CODE_OF_CONDUCT.md).
+O [CHANGELOG](CHANGELOG.md) lista as mudanças.
 
-## Security
+## Segurança
 
-Thinkflow runs commands for MCP stdio servers and in Agent mode, stores provider keys, and may
-handle personal data: read [SECURITY.md](SECURITY.md) for the security model, and report
-vulnerabilities privately through GitHub Security Advisories.
+O Thinkflow executa comandos de servidores MCP stdio e no Modo Agente, guarda chaves de provedores e pode
+lidar com dados pessoais: leia o [SECURITY.md](SECURITY.md) para o modelo de segurança e relate
+vulnerabilidades de forma privada pelos GitHub Security Advisories.
 
-## License
+## Licença
 
 [MIT](LICENSE) © 2026 Cristiano Aquino
