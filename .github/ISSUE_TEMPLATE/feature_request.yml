@@ -1,0 +1,46 @@
+name: Feature request
+description: Suggest an idea or an improvement
+title: 'Feature: '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do, and what gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would you like it to work?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - AI gateway / routing
+        - Chat / agent mode
+        - Library
+        - Data with AI
+        - Privacy firewall
+        - Reports
+        - Tests (recording, evidence, documents)
+        - Prototypes / system profiles
+        - Storage / Docker
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: I would like to work on this myself

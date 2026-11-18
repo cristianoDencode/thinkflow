@@ -1,0 +1,289 @@
+/*
+ * GrapesJS UI skinned with the app tokens (light/dark follow the `.dark`/data-theme tokens the app
+ * already defines on :root). Scoped to `.proto-editor`; the canvas iframe content is NOT themed:
+ * it is the prototype itself.
+ */
+.proto-editor-page {
+  --gjs-primary-color: var(--surface);
+  --gjs-secondary-color: var(--text);
+  --gjs-tertiary-color: var(--accent);
+  --gjs-quaternary-color: var(--accent-text);
+  --gjs-main-color: var(--surface);
+  --gjs-font-color: var(--text);
+  --gjs-font-color-active: var(--text);
+  --gjs-main-dark-color: color-mix(in srgb, var(--text) 8%, transparent);
+  --gjs-main-light-color: color-mix(in srgb, var(--text) 6%, transparent);
+  --gjs-light-border: var(--border);
+  --gjs-secondary-dark-color: color-mix(in srgb, var(--text) 8%, transparent);
+  --gjs-secondary-light-color: var(--muted);
+  --gjs-soft-light-color: transparent;
+  --gjs-main-font: var(--font-sans);
+  --gjs-font-size: 0.75rem;
+  --gjs-arrow-color: var(--muted);
+  --gjs-color-blue: var(--accent);
+  --gjs-color-highlight: var(--ring);
+}
+
+.proto-editor .gjs-editor-cont,
+.proto-editor .gjs-cv-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.proto-editor .gjs-cv-canvas {
+  top: 0;
+  left: 0;
+  background-color: var(--surface-2);
+}
+
+/* panels rendered by GrapesJS inside our own React side panels */
+.proto-panel .gjs-blocks-c,
+.proto-panel .gjs-layer,
+.proto-panel .gjs-sm-sectors,
+.proto-panel .gjs-trt-traits {
+  color: var(--text);
+}
+
+.proto-panel .gjs-block-categories,
+.proto-panel .gjs-blocks-cs {
+  display: block;
+}
+.proto-panel .gjs-block-category {
+  border-bottom: 1px solid var(--border);
+}
+.proto-panel .gjs-title,
+.proto-panel .gjs-block-category .gjs-title,
+.proto-panel .gjs-sm-sector-title {
+  background: var(--surface-2);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 8px 12px;
+}
+.proto-panel .gjs-blocks-c {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 8px;
+}
+.proto-panel .gjs-block {
+  width: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 8px 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  box-shadow: none;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+.proto-panel .gjs-block:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.proto-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.proto-block-ico {
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--accent-text);
+}
+.proto-block-name {
+  font-size: 11px;
+  line-height: 13px;
+}
+/* ⭐ of a "Desta tela" tile: saves the component to the e-Cidade palette */
+.proto-block {
+  position: relative;
+}
+.proto-block-fav {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 12px;
+  line-height: 20px;
+  cursor: pointer;
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+.proto-block:hover .proto-block-fav,
+.proto-block-fav:focus-visible {
+  opacity: 1;
+  filter: none;
+  background: var(--surface-hover);
+}
+
+.proto-panel .gjs-field,
+.proto-panel .gjs-sm-field,
+.proto-panel .gjs-trt-trait .gjs-field {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+}
+.proto-panel .gjs-field input,
+.proto-panel .gjs-field select,
+.proto-panel .gjs-field textarea,
+.proto-panel .proto-trait-area {
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+.proto-panel .proto-trait-area {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 6px;
+  resize: vertical;
+}
+.proto-panel .gjs-field select option {
+  background: var(--bg-elevated);
+}
+.proto-panel .gjs-trt-trait {
+  padding: 6px 10px;
+  align-items: flex-start;
+}
+.proto-panel .gjs-label,
+.proto-panel .gjs-sm-label {
+  color: var(--muted);
+}
+.proto-panel .gjs-layer {
+  background: transparent;
+}
+.proto-panel .gjs-layer-title {
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+}
+.proto-panel .gjs-layer.gjs-selected > .gjs-layer-item,
+.proto-panel .gjs-layer.gjs-selected > .gjs-layer-item .gjs-layer-title {
+  background: var(--accent-soft);
+}
+.proto-panel .gjs-sm-sector {
+  border-bottom: 1px solid var(--border);
+}
+.proto-panel .gjs-radio-item-label {
+  color: var(--text);
+}
+.proto-panel .gjs-radio-item input:checked + .gjs-radio-item-label {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.proto-panel .gjs-clm-tags,
+.proto-panel .gjs-sm-sector-caret {
+  color: var(--muted);
+}
+.proto-panel ::-webkit-scrollbar {
+  width: 8px;
+}
+.proto-panel ::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+}
+
+/* the frame: a sheet of paper on the canvas */
+.proto-editor .gjs-frame-wrapper {
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.25);
+}
+/* in-canvas tools (toolbar of the selected component, badges) */
+.proto-editor .gjs-toolbar {
+  background-color: var(--accent);
+  border-radius: 6px;
+}
+.proto-editor .gjs-toolbar-item[data-tf-lock-tlb] svg {
+  display: block;
+  margin: 0 auto;
+}
+.proto-editor .gjs-badge {
+  background-color: var(--accent);
+  color: var(--accent-fg);
+  font-family: var(--font-sans);
+}
+.proto-editor .gjs-rte-toolbar {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.proto-editor .gjs-rte-action {
+  border-right: 1px solid var(--border);
+}
+
+.proto-panel .gjs-label,
+.proto-panel .gjs-sm-label,
+.proto-panel .gjs-trt-trait .gjs-label {
+  color: var(--text);
+  opacity: 0.85;
+}
+.proto-panel .gjs-field input,
+.proto-panel .gjs-field select,
+.proto-panel .gjs-field textarea,
+.proto-panel .proto-trait-area {
+  color: var(--text) !important;
+}
+
+/* Layers panel: nested levels must not push the right side (count, lock, move) out of the panel. */
+.proto-panel .gjs-layer {
+  grid-template-columns: minmax(0, 1fr);
+}
+.proto-panel .gjs-layer-item-left {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+.proto-panel .gjs-layer-title-c,
+.proto-panel .gjs-layer-title,
+.proto-panel .gjs-layer-title-inn {
+  min-width: 0;
+}
+.proto-panel .gjs-layer-name {
+  max-width: none;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.proto-panel .gjs-layer-item-right {
+  flex: none;
+  align-items: center;
+}
+
+/* Layer lock button (before the move icon) */
+.proto-panel .tf-layer-lock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  padding: 2px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0;
+}
+.proto-panel .gjs-layer-item:hover .tf-layer-lock,
+.proto-panel .tf-layer-lock:focus-visible {
+  opacity: 1;
+}
+.proto-panel .tf-layer-lock:hover {
+  color: var(--accent-text);
+}
+.proto-panel .tf-layer-lock[aria-pressed='true'] {
+  color: var(--accent-text);
+  opacity: 1;
+}
+.proto-panel .tf-layer-locked > .gjs-layer-item .gjs-layer-title-inn {
+  opacity: 0.6;
+}

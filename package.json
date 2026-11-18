@@ -1,0 +1,36 @@
+{
+  "name": "thinkflow",
+  "private": true,
+  "license": "MIT",
+  "version": "0.1.0",
+  "description": "Thinkflow — self-hosted AI workspace for analysts and QA: provider routing with fallback, a privacy firewall, test evidence and screen prototypes.",
+  "type": "module",
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,web -c magenta,cyan \"pnpm --filter @thinkflow/server dev\" \"pnpm --filter @thinkflow/web dev\"",
+    "build": "pnpm -r build",
+    "start": "pnpm --filter @thinkflow/server start",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:coverage": "pnpm -r test:coverage",
+    "depcruise": "depcruise apps/server/src --config .dependency-cruiser.cjs",
+    "e2e": "pnpm --filter @thinkflow/web e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^10.0.7",
+    "dependency-cruiser": "^18.7.2",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "prettier": "^3.9.10",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.72.2"
+  }
+}

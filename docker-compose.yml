@@ -1,0 +1,113 @@
+services:
+  thinkflow:
+    build:
+      context: .
+      # PDF export and Mermaid validation of the reports need Chromium (+~300 MB). Without it the
+      # reports are still generated as HTML/Markdown. Uncomment to include it:
+      # args:
+      #   WITH_CHROMIUM: 'true'
+    image: thinkflow:local
+    container_name: thinkflow
+    ports:
+      # exposed only on the host loopback; change to "3737:3737" to share on the network
+      - '127.0.0.1:3737:3737'
+    environment:
+      # set a fixed secret so encrypted API keys survive container re-creation
+      THINKFLOW_SECRET: ${THINKFLOW_SECRET:-}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      # Document storage: `local` (default, DATA_DIR/objects) or `s3` (MinIO profile / any S3).
+      # See deploy/minio/README.md.
+      STORAGE_DRIVER: ${STORAGE_DRIVER:-local}
+      STORAGE_PREFIX: ${STORAGE_PREFIX:-}
+      STORAGE_MAX_OBJECT_MB: ${STORAGE_MAX_OBJECT_MB:-100}
+      S3_ENDPOINT: ${S3_ENDPOINT:-http://minio:9000}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_BUCKET: ${S3_BUCKET:-thinkflow}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-thinkflow}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
+      S3_CREATE_BUCKET: ${S3_CREATE_BUCKET:-false}
+      # Optional Presidio sidecar (profile `privacy`); empty = native detectors only. With the
+      # profile up, set PRIVACY_PRESIDIO_URL=http://presidio:3000 (or fill it in Settings).
+      PRIVACY_PRESIDIO_URL: ${PRIVACY_PRESIDIO_URL:-}
+    volumes:
+      - ./data:/data
+    # Compose >= 2.20. The app tolerates a missing MinIO, so this is only an ordering hint.
+    depends_on:
+      minio:
+        condition: service_started
+        required: false
+      presidio:
+        condition: service_started
+        required: false
+    restart: unless-stopped
+
+  # ---- Optional S3 storage (profile `minio`): docker compose --profile minio up -d ----
+  minio:
+    profiles: [minio]
+    # Chainguard (the official minio/minio images are no longer published). Pinned by digest;
+    # override with MINIO_IMAGE. Runs as uid 65532, hence the named volume.
+    image: ${MINIO_IMAGE:-cgr.dev/chainguard/minio@sha256:db3f583fa49121942168bd6383a773b2cde3384c9a99bf7193560b9a0f3a28fd}
+    command: ['server', '/data', '--console-address', ':9001']
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-thinkflow-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-} # required with the minio profile (min 8 chars)
+      # MINIO_BROWSER: 'off'   # production: disable the console
+    volumes:
+      - minio-data:/data
+    ports:
+      # host loopback only (for `pnpm dev` on the host and the console); remove in production
+      - '127.0.0.1:9000:9000'
+      - '127.0.0.1:9001:9001'
+    healthcheck:
+      # the image has no curl/wget: plain HTTP over bash /dev/tcp
+      test:
+        - CMD
+        - bash
+        - -c
+        - 'exec 3<>/dev/tcp/127.0.0.1/9000 && printf "GET /minio/health/live HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3 && read -r l <&3 && [[ $$l == *200* ]]'
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    restart: unless-stopped
+
+  # One-shot, idempotent: bucket + least-privilege app user. Needs the -dev mc image (has a shell).
+  minio-init:
+    profiles: [minio]
+    image: ${MC_IMAGE:-cgr.dev/chainguard/minio-client@sha256:d28f884b111d8555fe890c2e47a11f12d3193d554a849ca7b7048a2826e960be}
+    entrypoint: ['/bin/sh', '/init/init.sh']
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-thinkflow-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-} # required with the minio profile (min 8 chars)
+      S3_BUCKET: ${S3_BUCKET:-thinkflow}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-thinkflow}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-} # required with the minio profile
+    volumes:
+      - ./deploy/minio:/init:ro
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: 'no'
+
+  # ---- Optional PII detector (profile `privacy`): docker compose --profile privacy up -d --build ----
+  # Presidio analyzer + spaCy pt_core_news_lg + tarja-presidio (CPF, CNPJ, CNS...). Heavy: about
+  # 1.5 GB of image and 1-2 GB of RAM at runtime; the first start takes a minute to load the model.
+  # Internal network only (no `ports`): the app reaches it at http://presidio:3000.
+  presidio:
+    profiles: [privacy]
+    build:
+      context: ./docker/presidio
+    image: thinkflow-presidio:local
+    expose:
+      - '3000'
+    healthcheck:
+      test: ['CMD', 'curl', '-fs', 'http://localhost:3000/health']
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 120s
+    restart: unless-stopped
+
+volumes:
+  minio-data:
