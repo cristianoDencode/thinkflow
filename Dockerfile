@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---------- build ----------
-FROM node:24-bookworm-slim AS build
+FROM node:25-bookworm-slim AS build
 WORKDIR /app
 # toolchain for native modules (better-sqlite3) when no prebuilt binary matches
 RUN apt-get update \
@@ -21,7 +21,7 @@ RUN pnpm --filter @thinkflow/server build \
   && pnpm --filter @thinkflow/server deploy --prod --legacy /out
 
 # ---------- runtime ----------
-FROM node:24-bookworm-slim
+FROM node:25-bookworm-slim
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
     PORT=3737 \
